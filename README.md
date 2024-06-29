@@ -1,18 +1,29 @@
 # general-forms-poc
 
-To install dependencies:
+To install dependencies for backend:
 
 ```bash
-bun install
+npm install
 ```
 
-To run:
+To run backend:
 
 ```bash
-bun run index.ts
+npm run dev
 ```
 
-This project was created using `bun init` in bun v1.1.8. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
-# test_tables
-# test_tables
-# test_tables
+To install dependencies for frontend:
+
+```bash
+cd frontend
+npm install
+```
+
+To run frontend:
+
+```bash
+cd frontend
+npm start
+```
+
+
