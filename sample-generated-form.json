@@ -1,0 +1,81 @@
+{
+  "id": 1,
+  "name": "BRSR",
+  "description": "Basic Rapid Survey Report",
+  "sections": [
+    {
+      "id": 1,
+      "name": "Section 1",
+      "description": "Section 1 Description",
+      "QuestionSection": [
+        {
+          "question": {
+            "id": 1,
+            "name": "Question 1",
+            "description": "Question 1 Description",
+            "answerSchema": "{\"type\":\"Static\"}",
+            "Answer": [
+              {
+                "id": 1,
+                "value": "\"Yes\"",
+                "createdAt": "2024-06-26T05:55:58.966Z"
+              }
+            ]
+          }
+        },
+        {
+          "question": {
+            "id": 2,
+            "name": "Question 2",
+            "description": "Question 2 Description",
+            "answerSchema": "{\"type\":\"FixedTable\",\"columns\":[\"Column1\",\"Column2\"],\"rows\":[\"Row1\",\"Row2\"]}",
+            "Answer": [
+              {
+                "id": 2,
+                "value": "[[\"Value1\",\"Value2\"],[\"Value3\",\"Value4\"]]",
+                "createdAt": "2024-06-26T05:55:59.026Z"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Section 2",
+      "description": "Section 2 Description",
+      "QuestionSection": [
+        {
+          "question": {
+            "id": 3,
+            "name": "Question 3",
+            "description": "Question 3 Description",
+            "answerSchema": "{\"type\":\"DynamicTable\",\"columns\":[\"Product\",\"Price\",\"Quantity\"]}",
+            "Answer": [
+              {
+                "id": 3,
+                "value": "[[\"Laptop\",1200,5],[\"Smartphone\",700,10]]",
+                "createdAt": "2024-06-26T05:55:59.151Z"
+              }
+            ]
+          }
+        },
+        {
+          "question": {
+            "id": 4,
+            "name": "Question 4",
+            "description": "Question 4 Description",
+            "answerSchema": "{\"type\":\"Static\"}",
+            "Answer": [
+              {
+                "id": 4,
+                "value": "\"No\"",
+                "createdAt": "2024-06-26T05:55:59.303Z"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

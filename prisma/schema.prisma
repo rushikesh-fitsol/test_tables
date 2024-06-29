@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// only readable tables
+model Form {
+  id          Int       @id @default(autoincrement())
+  // Name of the form, e.g. "BRSR", "CDP"
+  name        String
+  description String?
+  // e.g. "India", "USA", "UK
+  region      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  // Sections of the form
+  sections    Section[]
+  // QuestionSectionForm QuestionSectionForm[]
+}
+
+model Section {
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String?
+  formId          Int
+  form            Form              @relation(fields: [formId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  QuestionSection QuestionSection[]
+}
+
+model Question {
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String?
+  answerSchema    String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Answer          Answer[]
+  QuestionSection QuestionSection[]
+}
+
+model QuestionSection {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  sectionId  Int
+  question   Question @relation(fields: [questionId], references: [id])
+  section    Section  @relation(fields: [sectionId], references: [id])
+  // form       Form     @relation(fields: [formId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// only modifyable table
+model Answer {
+  id         Int      @id @default(autoincrement())
+  // who answered the question, thus the client id
+  clientId   Int
+  // the value of the answer, e.g. "Yes", "1", "{ "name": "John", "age": 30 }", 
+  // a stringified JSON
+  value      String   @db.Text
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([clientId, questionId])
+}
