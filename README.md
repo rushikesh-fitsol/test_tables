@@ -23,7 +23,7 @@ To run frontend:
 
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
 
 
