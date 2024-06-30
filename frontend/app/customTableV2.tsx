@@ -81,7 +81,13 @@ export const ExampleDynamicTableSchema: AnswerSchema = {
 }
 
 
-function RenderColumns({ columns, rowDepth, colDepth }: { columns: ColumnHeader[][], rowDepth: number, colDepth: number }) {
+interface RenderColumnsProps {
+    columns: ColumnHeader[][];
+    rowDepth: number;
+    colDepth: number;
+}
+
+function RenderColumns({ columns, rowDepth, colDepth }: RenderColumnsProps) {
     console.log("columns", columns);
     console.log("rowDepth", rowDepth);
     console.log("colDepth", colDepth);
@@ -145,8 +151,19 @@ function RenderColumns({ columns, rowDepth, colDepth }: { columns: ColumnHeader[
 //     );
 // }
 
-function RenderRowHeaders_withrowidtrack_n_renderfields_rowwise({ schema, rowDepth, colDepth, fields, handleInputChange }: { schema: AnswerSchema, rowDepth: number, colDepth: number, fields: { [key: string]: any }, handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) {
-    // Placeholder for tracking rowspans to determine when to skip rendering a cell
+interface RenderRowHeadersAndFieldsProps {
+    schema: AnswerSchema;
+    rowDepth: number;
+    colDepth: number;
+    fields: { [key: string]: any };
+    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+/**
+ * Renders row wise by keeping track of row ids
+ */
+function RenderRowHeadersAndFields({ schema, rowDepth, colDepth, fields, handleInputChange }: RenderRowHeadersAndFieldsProps) {
+    // Keep track of rendered row ids, can be removed if row ids are unique and we use null for empty cells
     const renderedIds = new Set<string>();
 
     return (
@@ -176,7 +193,7 @@ function RenderRowHeaders_withrowidtrack_n_renderfields_rowwise({ schema, rowDep
                             );
                         })}
                         {lastRowId && (
-                            <RenderFieldsRowWise schema={schema} rowId={lastRowId} fields={fields} handleInputChange={handleInputChange} />
+                            <RenderFields schema={schema} rowId={lastRowId} fields={fields} handleInputChange={handleInputChange} />
                         )}
                     </tr>
                 )
@@ -185,8 +202,17 @@ function RenderRowHeaders_withrowidtrack_n_renderfields_rowwise({ schema, rowDep
     )
 }
 
+interface RenderFieldsProps {
+    schema: AnswerSchema;
+    rowId: string;
+    fields: { [key: string]: any };
+    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-function RenderFieldsRowWise({ schema, rowId, fields, handleInputChange }: { schema: AnswerSchema, rowId: string, fields: { [key: string]: any }, handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void }) {
+/** 
+ * Renders row wise
+ */
+function RenderFields({ schema, rowId, fields, handleInputChange }: RenderFieldsProps) {
     return (
         <>
             {schema.key_map.columns.map((colId, colIndex) => {
@@ -212,18 +238,20 @@ function RenderFieldsRowWise({ schema, rowId, fields, handleInputChange }: { sch
 export const CreateTableDyn = ({ schema }: { schema: AnswerSchema }) => {
     const colDepth = schema.column_headers_row_wise.length;
     const rowDepth = schema.rows_headers.length;
+
+    // Initialize state with empty strings for all fields
     const initializeState = () => {
         const initialState: { [key: string]: any } = {};
         schema.key_map.columns.forEach((col) => {
             schema.key_map.rows.forEach((row) => {
-                const key = `${col}_${row}`;
+                const key = `${col}_${row}`; // e.g. c1_r1
                 initialState[key] = '';
             });
         });
         return initialState;
     };
 
-    const [fields, setFields] = useState(initializeState());
+    const [fields, setFields] = useState(initializeState()); // e.g. { c1_r1: 'value' }
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, id } = event.target;
@@ -241,7 +269,7 @@ export const CreateTableDyn = ({ schema }: { schema: AnswerSchema }) => {
                     <RenderColumns columns={schema.column_headers_row_wise} rowDepth={rowDepth} colDepth={colDepth} />
                 </thead>
                 <tbody>
-                    <RenderRowHeaders_withrowidtrack_n_renderfields_rowwise schema={schema} rowDepth={rowDepth} colDepth={colDepth} fields={fields} handleInputChange={handleInputChange} />
+                    <RenderRowHeadersAndFields schema={schema} rowDepth={rowDepth} colDepth={colDepth} fields={fields} handleInputChange={handleInputChange} />
                 </tbody>
             </table>
         </div >
