@@ -5,8 +5,8 @@ import { useState } from "react";
 interface AnswerSchema {
     type: string;
     version: string;
-    column_headers_row_wise: ColumnHeader[][];
-    rows_headers: (RowHeader | null)[][];
+    column_headers_row_wise: (ColumnHeader | null)[][];
+    rows_headers: RowHeader[][];
     key_map: {
         columns: string[]
         rows: string[]
@@ -31,12 +31,16 @@ export const ExampleDynamicTableSchema: AnswerSchema = {
     "column_headers_row_wise": [
         // c1, c2
         [
+            null,
+            null,
             { "name": "c1", "id": "c1", "style": { colspan: 4 } },
             { "name": "c2", "id": "c2", "style": { colspan: 2 } },
 
         ],
         // c3, c4, c5, c6
         [
+            null,
+            null,
             { "name": "c3", "id": "c3", style: { colspan: 2 } },
             { "name": "c4", "id": "c4", style: { colspan: 2 } },
             { "name": "c5", "id": "c5", style: { colspan: 1, rowspan: 2 } },
@@ -44,6 +48,8 @@ export const ExampleDynamicTableSchema: AnswerSchema = {
         ],
         // c7, c8, c9, c10
         [
+            null,
+            null,
             { "name": "c7", "id": "c7" },
             { "name": "c8", "id": "c8" },
             { "name": "c9", "id": "c9" },
@@ -59,7 +65,7 @@ export const ExampleDynamicTableSchema: AnswerSchema = {
         ],
         // row2
         [
-            { "name": "", "id": "r1" }, // empty cell, we can use null as well or same row id
+            // { "name": "", "id": "r1" }, // empty cell, we can use null as well or same row id
             { "name": "r3", "id": "r3" },
         ],
         // row3
@@ -69,8 +75,11 @@ export const ExampleDynamicTableSchema: AnswerSchema = {
         ],
         // row4
         [
-            null, // empty cell
+            // null, // empty cell
             { "name": "r6", "id": "r6" },
+        ],
+        [
+            {name: "r7", id: "r7", style: {colspan: 2}}
         ]
     ],
 
@@ -82,7 +91,7 @@ export const ExampleDynamicTableSchema: AnswerSchema = {
 
 
 interface RenderColumnsProps {
-    columns: ColumnHeader[][];
+    columns: (ColumnHeader | null)[][];
     rowDepth: number;
     colDepth: number;
 }
@@ -97,8 +106,13 @@ function RenderColumns({ columns, rowDepth, colDepth }: RenderColumnsProps) {
             {columns.map((row, i) => {
                 return (
                     <tr key={i}>
-                        <th colSpan={2}></th>
+                        {/* <th colSpan={2}></th> */}
                         {row.map((col, j) => {
+                            if (!col) return (
+                                <th key={j}>
+                                    {null}
+                                </th>
+                            )
                             return (
                                 <th
                                     key={col.id}
@@ -164,23 +178,23 @@ interface RenderRowHeadersAndFieldsProps {
  */
 function RenderRowHeadersAndFields({ schema, rowDepth, colDepth, fields, handleInputChange }: RenderRowHeadersAndFieldsProps) {
     // Keep track of rendered row ids, can be removed if row ids are unique and we use null for empty cells
-    const renderedIds = new Set<string>();
+    // const renderedIds = new Set<string>();
 
     return (
         <>
             {schema.rows_headers.map((row, rowIndex) => {
-                const lastRowId = row[row.length - 1]?.id;
+                const lastRowId = row[row.length - 1].id;
                 return (
                     <tr key={rowIndex}>
                         {row.map((cell, cellIndex) => {
-                            if (cell == null) {
-                                return null;
-                            }
-                            console.log(cell.id);
-                            if (renderedIds.has(cell.id)) {
-                                return null;
-                            }
-                            renderedIds.add(cell.id);
+                            // if (cell == null) {
+                            //     return null;
+                            // }
+                            // console.log(cell.id);
+                            // if (renderedIds.has(cell.id)) {
+                            //     return null;
+                            // }
+                            // renderedIds.add(cell.id);
                             return (
                                 <th
                                     key={cell.id}
@@ -192,9 +206,9 @@ function RenderRowHeadersAndFields({ schema, rowDepth, colDepth, fields, handleI
                                 </th>
                             );
                         })}
-                        {lastRowId && (
-                            <RenderFields schema={schema} rowId={lastRowId} fields={fields} handleInputChange={handleInputChange} />
-                        )}
+                        {/* {lastRowId && ( */}
+                        <RenderFields schema={schema} rowId={lastRowId} fields={fields} handleInputChange={handleInputChange} />
+                        {/* )} */}
                     </tr>
                 )
             })}
@@ -216,9 +230,9 @@ function RenderFields({ schema, rowId, fields, handleInputChange }: RenderFields
     return (
         <>
             {schema.key_map.columns.map((colId, colIndex) => {
-                const key = `${colId}_${rowId}`;
+                const key = `${colId}_${rowId}`; // eg. c7_r2, c8_r2, 
                 return (
-                    <th key={colIndex} className="border border-black">
+                    <td key={colIndex} className="border border-black">
                         <input
                             type="text"
                             id={key}
@@ -227,7 +241,7 @@ function RenderFields({ schema, rowId, fields, handleInputChange }: RenderFields
                             className="border border-black"
                             placeholder="Enter value"
                         />
-                    </th>
+                    </td>
                 );
             })}
         </>
@@ -237,7 +251,7 @@ function RenderFields({ schema, rowId, fields, handleInputChange }: RenderFields
 
 export const CreateTableDyn = ({ schema }: { schema: AnswerSchema }) => {
     const colDepth = schema.column_headers_row_wise.length;
-    const rowDepth = schema.rows_headers.length;
+    const rowDepth = schema.rows_headers.length; // 
 
     // Initialize state with empty strings for all fields
     const initializeState = () => {
