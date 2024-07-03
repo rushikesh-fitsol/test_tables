@@ -2,12 +2,12 @@ import prisma from "../db/db";
 
 
 export const getquestions = async (req: any, res: any) => {
-  const questions = await prisma.question.findMany();
+  const questions = await prisma.questions.findMany();
   res.json(questions);
 }
 
 export const getquestion = async (req: any, res: any) => {
-  const question = await prisma.question.findUnique({
+  const question = await prisma.questions.findUnique({
     where: {
       id: parseInt(req.params.id)
     }
@@ -18,7 +18,7 @@ export const getquestion = async (req: any, res: any) => {
 export const getanswer = async (req: any, res: any) => {
   const qid = req.body.questionId;
   const clientId = req.body.clientId;
-  const answer = await prisma.answer.findUnique({
+  const answer = await prisma.answers.findUnique({
     where: {
       clientId_questionId: {
         clientId: clientId,
@@ -32,7 +32,7 @@ export const getanswer = async (req: any, res: any) => {
 
 export const getanswers = async (req: any, res: any) => {
   const clientId = req.params.clientId;
-  const answers = await prisma.answer.findMany({
+  const answers = await prisma.answers.findMany({
     where: {
       clientId: clientId
     }
@@ -44,7 +44,7 @@ export const getanswers = async (req: any, res: any) => {
 export const generateform = async (req: any, res: any) => {
   const clientId: number = req.body.clientId;
   const formId: number = req.body.formId;
-  const formWithDetails = await prisma.form.findUnique({
+  const formWithDetails = await prisma.formCatalogs.findUnique({
     where: { id: formId },
     select: {
       id: true,
@@ -89,7 +89,7 @@ export const saveanswer = async (req: any, res: any) => {
   const clientId = req.body.clientId;
   const questionId = req.body.questionId;
   const value = req.body.value;
-  const answer = await prisma.answer.upsert({
+  const answer = await prisma.answers.upsert({
     where: {
       clientId_questionId: {
         clientId: clientId,

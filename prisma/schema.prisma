@@ -18,65 +18,65 @@ datasource db {
 }
 
 // only readable tables
-model Form {
-  id          Int       @id @default(autoincrement())
+model FormCatalogs {
+  id          Int        @id @default(autoincrement())
   // Name of the form, e.g. "BRSR", "CDP"
   name        String
   description String?
   // e.g. "India", "USA", "UK
   region      String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   // Sections of the form
-  sections    Section[]
+  sections    Sections[]
   // QuestionSectionForm QuestionSectionForm[]
 }
 
-model Section {
-  id              Int               @id @default(autoincrement())
+model Sections {
+  id              Int                @id @default(autoincrement())
   name            String
   description     String?
   formId          Int
-  form            Form              @relation(fields: [formId], references: [id])
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  QuestionSection QuestionSection[]
+  form            FormCatalogs       @relation(fields: [formId], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  QuestionSection QuestionSections[]
 }
 
-model Question {
-  id              Int               @id @default(autoincrement())
+model Questions {
+  id              Int                @id @default(autoincrement())
   name            String
   description     String?
   answerSchema    String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  Answer          Answer[]
-  QuestionSection QuestionSection[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  Answer          Answers[]
+  QuestionSection QuestionSections[]
 }
 
-model QuestionSection {
-  id         Int      @id @default(autoincrement())
+model QuestionSections {
+  id         Int       @id @default(autoincrement())
   questionId Int
   sectionId  Int
-  question   Question @relation(fields: [questionId], references: [id])
-  section    Section  @relation(fields: [sectionId], references: [id])
+  question   Questions @relation(fields: [questionId], references: [id])
+  section    Sections  @relation(fields: [sectionId], references: [id])
   // form       Form     @relation(fields: [formId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 // only modifyable table
-model Answer {
-  id         Int      @id @default(autoincrement())
+model Answers {
+  id         Int       @id @default(autoincrement())
   // who answered the question, thus the client id
   clientId   Int
   // the value of the answer, e.g. "Yes", "1", "{ "name": "John", "age": 30 }", 
   // a stringified JSON
-  value      String   @db.Text
+  value      String    @db.Text
   questionId Int
-  question   Question @relation(fields: [questionId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  question   Questions @relation(fields: [questionId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@unique([clientId, questionId])
 }

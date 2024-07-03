@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 interface AnswerSchema {
-    type: string;
+    type: string; // "static" | "table"
     version: string;
     column_headers_row_wise: (ColumnHeader | null)[][];
     rows_headers: RowHeader[][];
@@ -265,7 +265,10 @@ export const CreateTableDyn = ({ schema }: { schema: AnswerSchema }) => {
         return initialState;
     };
 
-    const [fields, setFields] = useState(initializeState()); // e.g. { c1_r1: 'value' }
+    const [fields, setFields] = useState(initializeState()); // e.g. { c1_r1: 'v1', c2_r2: "v2" }
+
+    const data = JSON.stringify(fields)
+
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, id } = event.target;
