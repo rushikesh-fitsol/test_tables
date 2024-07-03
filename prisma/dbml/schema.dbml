@@ -32,6 +32,7 @@ Table Questions {
   updatedAt DateTime [not null]
   Answer Answers [not null]
   QuestionSection QuestionSections [not null]
+  GlobalSectionsQuestions GlobalSectionQuestions [not null]
 }
 
 Table QuestionSections {
@@ -58,6 +59,25 @@ Table Answers {
   }
 }
 
+Table GlobalSections {
+  id Int [pk, increment]
+  name String [not null]
+  description String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  GlobalSectionsQuestions GlobalSectionQuestions [not null]
+}
+
+Table GlobalSectionQuestions {
+  id Int [pk, increment]
+  globalSectionId Int [not null]
+  questionId Int [not null]
+  globalSection GlobalSections [not null]
+  question Questions [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Ref: Sections.formId > FormCatalogs.id
 
 Ref: QuestionSections.questionId > Questions.id
@@ -65,3 +85,7 @@ Ref: QuestionSections.questionId > Questions.id
 Ref: QuestionSections.sectionId > Sections.id
 
 Ref: Answers.questionId > Questions.id
+
+Ref: GlobalSectionQuestions.globalSectionId > GlobalSections.id
+
+Ref: GlobalSectionQuestions.questionId > Questions.id

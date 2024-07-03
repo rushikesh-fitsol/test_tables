@@ -44,14 +44,15 @@ model Sections {
 }
 
 model Questions {
-  id              Int                @id @default(autoincrement())
-  name            String
-  description     String?
-  answerSchema    String
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  Answer          Answers[]
-  QuestionSection QuestionSections[]
+  id                      Int                       @id @default(autoincrement())
+  name                    String
+  description             String?
+  answerSchema            String
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  Answer                  Answers[]
+  QuestionSection         QuestionSections[]
+  GlobalSectionsQuestions GlobalSectionQuestions[]
 }
 
 model QuestionSections {
@@ -79,4 +80,24 @@ model Answers {
   updatedAt  DateTime  @updatedAt
 
   @@unique([clientId, questionId])
+}
+
+model GlobalSections {
+  id                      Int                       @id @default(autoincrement())
+  name                    String
+  description             String?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  // QuestionSectionForm QuestionSectionForm[]
+  GlobalSectionsQuestions GlobalSectionQuestions[]
+}
+
+model GlobalSectionQuestions {
+  id              Int            @id @default(autoincrement())
+  globalSectionId Int
+  questionId      Int
+  globalSection   GlobalSections @relation(fields: [globalSectionId], references: [id])
+  question        Questions      @relation(fields: [questionId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
