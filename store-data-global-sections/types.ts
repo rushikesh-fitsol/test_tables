@@ -15,6 +15,10 @@ interface TextSchema {
     type: "text";
 }
 
+interface EmailSchema {
+    type: "email";
+}
+
 interface LongTextSchema {
     type: "longtext";
 }
@@ -54,6 +58,7 @@ export type AnswerSchema = (
     FixedTableSchema |
     DynamicTableSchema |
     TextSchema |
+    EmailSchema |
     LongTextSchema |
     DateSchema |
     DropdownSchema

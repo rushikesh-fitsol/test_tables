@@ -17,6 +17,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// model Users {
+//   id        Int      @id @default(autoincrement())
+//   email     String   @unique
+//   password  String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now()) @updatedAt
+// }
+
 // only readable tables
 model FormCatalogs {
   id          Int        @id @default(autoincrement())
@@ -26,30 +34,35 @@ model FormCatalogs {
   // e.g. "India", "USA", "UK
   region      String?
   createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  updatedAt   DateTime   @default(now()) @updatedAt
   // Sections of the form
   sections    Sections[]
   // QuestionSectionForm QuestionSectionForm[]
 }
 
+// Form -> Sections -> subSections -> Questions
+
 model Sections {
   id              Int                @id @default(autoincrement())
   name            String
   description     String?
-  formId          Int
-  form            FormCatalogs       @relation(fields: [formId], references: [id])
+  formId          Int? // Make formId optional
+  form            FormCatalogs?      @relation(fields: [formId], references: [id]) // Make form relation optional
   createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  updatedAt       DateTime           @default(now()) @updatedAt
   QuestionSection QuestionSections[]
+  parentId        Int?               @map("parent_section_id")
+  parentSection   Sections?          @relation("ParentChild", fields: [parentId], references: [id])
+  subSections     Sections[]         @relation("ParentChild")
 }
 
 model Questions {
-  id                      Int                       @id @default(autoincrement())
+  id                      Int                      @id @default(autoincrement())
   name                    String
-  description             String?
-  answerSchema            String
-  createdAt               DateTime                  @default(now())
-  updatedAt               DateTime                  @updatedAt
+  description             String
+  answerSchema            String                   @db.Text
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @default(now()) @updatedAt
   Answer                  Answers[]
   QuestionSection         QuestionSections[]
   GlobalSectionsQuestions GlobalSectionQuestions[]
@@ -63,7 +76,7 @@ model QuestionSections {
   section    Sections  @relation(fields: [sectionId], references: [id])
   // form       Form     @relation(fields: [formId], references: [id])
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  updatedAt  DateTime  @default(now()) @updatedAt
 }
 
 // only modifyable table
@@ -77,17 +90,17 @@ model Answers {
   questionId Int
   question   Questions @relation(fields: [questionId], references: [id])
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  updatedAt  DateTime  @default(now()) @updatedAt
 
   @@unique([clientId, questionId])
 }
 
 model GlobalSections {
-  id                      Int                       @id @default(autoincrement())
+  id                      Int                      @id @default(autoincrement())
   name                    String
   description             String?
-  createdAt               DateTime                  @default(now())
-  updatedAt               DateTime                  @updatedAt
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @default(now()) @updatedAt
   // QuestionSectionForm QuestionSectionForm[]
   GlobalSectionsQuestions GlobalSectionQuestions[]
 }
@@ -99,5 +112,5 @@ model GlobalSectionQuestions {
   globalSection   GlobalSections @relation(fields: [globalSectionId], references: [id])
   question        Questions      @relation(fields: [questionId], references: [id])
   createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  updatedAt       DateTime       @default(now()) @updatedAt
 }
