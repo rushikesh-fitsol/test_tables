@@ -37,8 +37,6 @@ const tablesToTruncateInOrder: string[] = [
     // 'GlobalSectionQuestions',
     // 'GlobalSections',
     // 'Questions',
-    'QuestionSections',
-    'Sections',
 ];
 
 truncateTable(tablesToTruncateInOrder).then(() => {
