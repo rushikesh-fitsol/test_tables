@@ -40,8 +40,8 @@ async function truncateTable(tables: string[]) {
 // Order is important, more dependent tables should be dropped first
 // if you want to truncate Questions table, you should truncate GlobalSectionQuestions first, then GlobalSections and then Questions
 const tablesToTruncateInOrder: string[] = [
-    // 'GlobalSectionQuestions',
-    // 'GlobalSections',
+    'GlobalSectionQuestions',
+    'GlobalSections',
     // 'Questions',
 ];
 

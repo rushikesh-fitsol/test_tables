@@ -17,6 +17,10 @@ const GlobalSections: Prisma.GlobalSectionsCreateManyInput[] = [
     {
         name: "Stakeholder Identification",
         description: "Stakeholder Identification",
+    },
+    {
+        name: "Locations",
+        description: "Locations",
     }
 ]
 

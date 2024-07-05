@@ -22,6 +22,10 @@
   },
   "scripts": {
     "resetdb": "prisma db push --force-reset",
-    "dev": "nodemon --exec tsx index.ts"
+    "dev": "nodemon --exec tsx index.ts",
+    "migrate:globalsections": "tsx store-data-global-sections/add_globalsections.ts",
+    "migrate:globalsectionquestions": "tsx store-data-global-sections/add_globalsectionquestions.ts",
+    "migrate:questions": "tsx store-data-global-sections/add_questions.ts",
+    "truncate": "tsx store-data-global-sections/truncate.ts"
   }
 }

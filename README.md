@@ -26,4 +26,12 @@ cd frontend
 npm run dev
 ```
 
+To store the data for Global Sections:
+
+1. create a mysql database in local 
+2. push the database using the command with prisma
+```bash
+npx prisma migrate dev --name init
+```
+3. 
 

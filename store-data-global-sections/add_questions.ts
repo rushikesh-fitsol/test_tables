@@ -212,7 +212,10 @@ const GeneralDisclosureQuestions: Prisma.QuestionsCreateManyInput[] = [
             }
         )
     }
+]
 
+const CSRQuestions: Prisma.QuestionsCreateManyInput[] = [
+    
 ]
 
 function stringify(obj: AnswerSchema): string {
