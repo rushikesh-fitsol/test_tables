@@ -56,16 +56,33 @@ model Sections {
   subSections     Sections[]         @relation("ParentChild")
 }
 
+enum ESG {
+  E
+  S
+  G
+}
+
 model Questions {
-  id                      Int                      @id @default(autoincrement())
-  name                    String
-  description             String
-  answerSchema            String                   @db.Text
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @default(now()) @updatedAt
-  Answer                  Answers[]
-  QuestionSection         QuestionSections[]
-  GlobalSectionsQuestions GlobalSectionQuestions[]
+  id                              Int                      @id @default(autoincrement())
+  name                            String
+  description                     String
+  answerSchema                    String                   @db.Text
+  // scoreGuide: { type: Sequelize.TEXT, allowNull: true },
+  //   max_essential_indicators_score: { type: Sequelize.INTEGER, allowNull: true },
+  //   max_leadership_indicators_score: { type: Sequelize.INTEGER, allowNull: true },
+  //   esg: {
+  //       type: Sequelize.ENUM('E', 'S', 'G'),
+  //       allowNull: true,
+  //   }
+  scoreGuide                      String?                  @db.Text
+  max_essential_indicators_score  Int?
+  max_leadership_indicators_score Int?
+  esg                             ESG?
+  createdAt                       DateTime                 @default(now())
+  updatedAt                       DateTime                 @default(now()) @updatedAt
+  Answer                          Answers[]
+  QuestionSection                 QuestionSections[]
+  GlobalSectionsQuestions         GlobalSectionQuestions[]
 }
 
 model QuestionSections {
@@ -80,17 +97,32 @@ model QuestionSections {
 }
 
 // only modifyable table
+
+enum ValueType {
+  GENERATED
+  MANUAL
+}
+
 model Answers {
-  id         Int       @id @default(autoincrement())
+  id                Int        @id @default(autoincrement())
   // who answered the question, thus the client id
-  clientId   Int
+  clientId          Int
   // the value of the answer, e.g. "Yes", "1", "{ "name": "John", "age": 30 }", 
   // a stringified JSON
-  value      String    @db.Text
-  questionId Int
-  question   Questions @relation(fields: [questionId], references: [id])
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now()) @updatedAt
+  value             String     @db.Text
+  questionId        Int
+  question          Questions  @relation(fields: [questionId], references: [id])
+  // valueType: {
+  //       type: Sequelize.ENUM('GENERATED', 'MANUAL'),
+  //       allowNull: true,
+  //   },
+  //   score: { type: Sequelize.INTEGER, allowNull: true },
+  //   score_explanation: { type: Sequelize.TEXT, allowNull: true },
+  valueType         ValueType?
+  score             Int?
+  score_explanation String?    @db.Text
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @default(now()) @updatedAt
 
   @@unique([clientId, questionId])
 }

@@ -16,11 +16,14 @@ Table Sections {
   id Int [pk, increment]
   name String [not null]
   description String
-  formId Int [not null]
-  form FormCatalogs [not null]
+  formId Int
+  form FormCatalogs
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   QuestionSection QuestionSections [not null]
+  parentId Int
+  parentSection Sections
+  subSections Sections [not null]
 }
 
 Table Questions {
@@ -28,6 +31,10 @@ Table Questions {
   name String [not null]
   description String [not null]
   answerSchema String [not null]
+  scoreGuide String
+  max_essential_indicators_score Int
+  max_leadership_indicators_score Int
+  esg ESG
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   Answer Answers [not null]
@@ -51,6 +58,9 @@ Table Answers {
   value String [not null]
   questionId Int [not null]
   question Questions [not null]
+  valueType ValueType
+  score Int
+  score_explanation String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
 
@@ -78,7 +88,20 @@ Table GlobalSectionQuestions {
   updatedAt DateTime [default: `now()`, not null]
 }
 
+Enum ESG {
+  E
+  S
+  G
+}
+
+Enum ValueType {
+  GENERATED
+  MANUAL
+}
+
 Ref: Sections.formId > FormCatalogs.id
+
+Ref: Sections.parentId - Sections.id
 
 Ref: QuestionSections.questionId > Questions.id
 
