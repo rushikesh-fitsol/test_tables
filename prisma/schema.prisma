@@ -67,6 +67,7 @@ model Questions {
   name                            String
   description                     String
   answerSchema                    String                   @db.Text
+  quid                            Int
   // scoreGuide: { type: Sequelize.TEXT, allowNull: true },
   //   max_essential_indicators_score: { type: Sequelize.INTEGER, allowNull: true },
   //   max_leadership_indicators_score: { type: Sequelize.INTEGER, allowNull: true },

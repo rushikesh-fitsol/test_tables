@@ -7,6 +7,11 @@ interface DropdownSchema {
     options: { id: string, label: string }[];
 }
 
+interface MultiInputSchema { // question: add name, email, phone number
+    type: "multiinput";
+    inputs: { id: string, type: string }[]; // [{id: name, type: text}, {id: email, type: email}] ans: {name: "John", email: "email", phone: "1234567890"}
+}
+
 interface DateSchema {
     type: "date";
 }

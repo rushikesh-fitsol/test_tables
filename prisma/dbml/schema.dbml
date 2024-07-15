@@ -31,6 +31,7 @@ Table Questions {
   name String [not null]
   description String [not null]
   answerSchema String [not null]
+  quid Int [not null]
   scoreGuide String
   max_essential_indicators_score Int
   max_leadership_indicators_score Int
