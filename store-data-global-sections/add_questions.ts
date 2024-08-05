@@ -1,8 +1,13 @@
 import type { Prisma } from "@prisma/client";
 import prisma from "../db/db";
 import type { AnswerSchema } from "./types";
-import { version } from "process";
-import * as e from "express";
+import { EmployeesCount } from "./questions_data/employees_count.data";
+import { employees_well_being } from "./questions_data/employees_well_being.data";
+import { DiversityNInclusion } from "./questions_data/diversity_n_inclusion.data";
+import { labor_management_rel } from "./questions_data/labor_management_relations.data";
+import { training_n_edu } from "./questions_data/training_n_edu.data";
+import { occupational_health_n_safety } from "./questions_data/occupational_health_n_safety.data";
+import { holdings_n_subs } from "./questions_data/holdings_n_subs.data";
 
 // const GeneralDisclosureQuestions: Prisma.QuestionsCreateManyInput[] = [
 //   {
@@ -1321,8 +1326,8 @@ function stringify(obj: AnswerSchema): string {
 async function main() {
   console.log("Adding questions to the database");
   await prisma.questions.createMany({
-    data: ProductsAndServicesQuestions,
-  });
+    data: holdings_n_subs
+  })
   console.log("Questions added to the database");
 }
 

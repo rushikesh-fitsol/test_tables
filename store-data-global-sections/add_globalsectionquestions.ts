@@ -1,5 +1,12 @@
 import type { Prisma } from "@prisma/client";
 import prisma from "../db/db";
+import { EmployeesCountSectionQuestion } from "./section_question_data/employees_count.data";
+import { EmployeesWellBeingSectionQuestion } from "./section_question_data/employees_well_being.data";
+import { DiversityNInclusionSectionQuestion } from "./section_question_data/diversity_n_inclusion.data";
+import { laborManagementRelationsSectionQuestion } from "./section_question_data/labor_management_relations.data";
+import { trainingNEduSectionQuestion } from "./section_question_data/training_n_edu.data";
+import { OccupationalHealthNSafetySectionQuestion } from "./section_question_data/occupational_health_n_safety.data";
+import { holdingsNSubsSectionQuestion } from "./section_question_data/holdings_n_subs.data";
 
 const GlobalSectionQuestions_GeneralDisclosure: Prisma.GlobalSectionQuestionsCreateManyInput[] =
   [
@@ -261,7 +268,7 @@ const GlobalSectionQuestions_GeneralDisclosure: Prisma.GlobalSectionQuestionsCre
 async function main() {
   console.log("Adding Global Section Questions to the database");
   await prisma.globalSectionQuestions.createMany({
-    data: GlobalSectionQuestions_GeneralDisclosure,
+    data: holdingsNSubsSectionQuestion
   });
   console.log("Global Section Questions added to the database");
 }

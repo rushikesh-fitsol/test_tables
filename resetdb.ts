@@ -18,9 +18,9 @@ const tablesToDrop = [
     'QuestionSections',
     'GlobalSectionQuestions',
     'Questions',
-    'Sections',
-    'FormCatalogs',
-    'GlobalSections',
+    // 'Sections',
+    // 'FormCatalogs',
+    // 'GlobalSections',
 ]; // Replace with your actual table names
 dropSchemaTables(tablesToDrop).then(() => {
     console.log('Done');

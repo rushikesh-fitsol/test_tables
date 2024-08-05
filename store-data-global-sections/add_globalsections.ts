@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import prisma from "../db/db";
+import { EmployeesCountSectionQuestion } from "./section_question_data/employees_count.data";
 
 const GlobalSections: Prisma.GlobalSectionsCreateManyInput[] = [
     {
